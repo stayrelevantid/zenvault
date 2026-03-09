@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zenvault-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "zerossl-cluster-issuer"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - playlab.my.id
+      secretName: zenvault-tls-secret
+  rules:
+    - host: playlab.my.id
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: zenvault-svc
+                port:
+                  number: 80

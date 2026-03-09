@@ -1,13 +1,13 @@
 # 🔐 ZenVault
 
-Ultra-lightweight Golang API running on k3d with automated Secret Management (ESO + Google Secret Manager) and TLS (cert-manager + ZeroSSL).
+Ultra-lightweight Golang API running on k3d with automated Secret Management (ESO + AWS Secrets Manager) and TLS (cert-manager + ZeroSSL).
 
 ---
 
 ## ⚡ Highlights
 
 - **Go Static Binary** — built from `scratch`, image size ~6MB
-- **Secret Automation** — Google Secret Manager → External Secrets Operator → K8s Secret
+- **Secret Automation** — AWS Secrets Manager → External Secrets Operator → K8s Secret
 - **TLS Automation** — ZeroSSL certificates via cert-manager + Traefik Ingress
 - **Minimal Footprint** — zero OS dependencies, ultra-low RAM usage
 
@@ -20,8 +20,8 @@ Ultra-lightweight Golang API running on k3d with automated Secret Management (ES
 └─────────────┘       └──────────────┘       └────────┬────────┘
                                                       │ env
        ┌──────────────────┐       ┌───────────────────┘
-       │  Google Secret   │──ESO──│  K8s Secret
-       │  Manager (GSM)   │       │  (auto-synced)
+       │   AWS Secrets    │──ESO──│  K8s Secret
+       │   Manager        │       │  (auto-synced)
        └──────────────────┘       └───────────────────
 ```
 
@@ -118,16 +118,13 @@ kubectl apply -f manifests/
 }
 ```
 
-## 🏷️ GCP Resource Labels
+## 🏷️ AWS Resource Prefix
 
-All Google Secret Manager resources use these labels:
+All AWS Secrets Manager resources use this prefix:
 
-| Label | Value |
+| Prefix | Value |
 |---|---|
-| `project` | `zenvault` |
-| `environment` | `production` |
-| `managed-by` | `eso` |
-| `owner` | `stayrelevantid` |
+| `zenvault/` | `zenvault/app_debug_key`, `zenvault/zerossl_eab_hmac` |
 
 ## 📄 License
 

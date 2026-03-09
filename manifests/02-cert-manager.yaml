@@ -1,0 +1,37 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: zerossl-eab-secret
+  namespace: cert-manager
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: aws-store
+    kind: ClusterSecretStore
+  target:
+    name: zerossl-eab-key
+    creationPolicy: Owner
+  data:
+    - secretKey: ZEROSSL_EAB_HMAC
+      remoteRef:
+        key: zenvault/zerossl_eab_hmac
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: zerossl-cluster-issuer
+spec:
+  acme:
+    server: https://acme.zerossl.com/v2/DV90
+    email: yogianakuii@gmail.com
+    privateKeySecretRef:
+      name: zerossl-account-key
+    externalAccountBinding:
+      keyID: AXPBHR7jGPqsxolXel_mjw
+      keySecretRef:
+        name: zerossl-eab-key
+        key: ZEROSSL_EAB_HMAC
+    solvers:
+    - http01:
+        ingress:
+          ingressClassName: traefik

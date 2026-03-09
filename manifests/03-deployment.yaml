@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zenvault-api
+  labels:
+    app: zenvault
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zenvault
+  template:
+    metadata:
+      labels:
+        app: zenvault
+    spec:
+      containers:
+        - name: zenvault
+          image: zenvault:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: zenvault-env-secret
+          resources:
+            requests:
+              memory: "16Mi"
+              cpu: "10m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zenvault-svc
+spec:
+  selector:
+    app: zenvault
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

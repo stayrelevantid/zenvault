@@ -1,3 +1,8 @@
+# GCP credentials & keys (NEVER commit these)
+*-key.json
+*.json.key
+application_default_credentials.json
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -35,3 +40,4 @@ go.work
 
 # OS
 .DS_Store
+.aws-creds.env

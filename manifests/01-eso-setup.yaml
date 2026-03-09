@@ -1,0 +1,40 @@
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: aws-store
+spec:
+  provider:
+    aws:
+      service: SecretsManager
+      region: ap-southeast-1
+      auth:
+        secretRef:
+          accessKeyIDSecretRef:
+            name: aws-secret
+            key: access-key
+            namespace: external-secrets
+          secretAccessKeySecretRef:
+            name: aws-secret
+            key: secret-access-key
+            namespace: external-secrets
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: zenvault-secrets
+  namespace: default
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: aws-store
+    kind: ClusterSecretStore
+  target:
+    name: zenvault-env-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: APP_DEBUG_KEY
+      remoteRef:
+        key: zenvault/app_debug_key
+    - secretKey: ZEROSSL_EAB_HMAC
+      remoteRef:
+        key: zenvault/zerossl_eab_hmac
