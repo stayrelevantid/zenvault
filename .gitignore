@@ -41,3 +41,4 @@ go.work
 # OS
 .DS_Store
 .aws-creds.env
+zenvault-eso-policy.json
